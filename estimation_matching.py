@@ -6,9 +6,9 @@ import matplotlib.pyplot as plt
 import cv2 as cv
 import math
 
-model_path = "posenet_mobilenet_v1_100_257x257_multi_kpt_stripped.tflite"
-template_path = "3.PNG"
-target_path = "9.PNG"
+model_path = "posenet_model/posenet_mobilenet_v1_100_257x257_multi_kpt_stripped.tflite"
+template_path = "pose_images/3.PNG"
+target_path = "pose_images/9.PNG"
 
 interpreter = tf.lite.Interpreter(model_path=model_path)
 interpreter.allocate_tensors()
@@ -281,10 +281,11 @@ def draw_grid(img, grid_size=9, heatmap=None, part=1):
       center_x += cell_size
       center_y = res//2 + cell_size//2
 
+# DO NOT UNCOMMENT UNLESS YOU WANT TO OVERRIDE YOUR FILE
 # image = cv.imread('1.PNG')
 # image = cv.resize(image, (257, 257))
 # draw_grid(image, 9, template_heatmaps)
 # cv.imshow("image", image)
 # cv.imwrite('1.PNG', image)
 
-# cv.waitKey(0)
+cv.waitKey(0)
