@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import cv2 as cv
 import math
 
 # Matching keypoints indices in the output of PoseNet
@@ -64,3 +65,64 @@ target_values = []
 for part in parts_to_compare:
   target_values.append(angle_length(arr_2[part[0]][:2], arr_2[part[1]][:2]))
 print(target_values)
+
+def matching(template_kp, target_kp, angle_deviation=30, size_deviation=1):
+
+  '''Input:
+      1. template_kp - list of tuples (for the template image) containng angles 
+      between particular body parts and x-axis as first elements and its sizes 
+      (distances between corresponding points as second elements)
+      2. target_kp - same for the target image
+      3. angle_deviation - acceptable angle difference between corresponding 
+      body parts in the images
+      4. size_deviation - acceptable proportions difference between the images
+    Output:
+      List of body parts which are deviated
+  '''
+
+  devs = []
+
+  # set an anchor size for proportions calculations - distance between shoulders
+  templ_anchor = template_kp[0][1]
+  targ_anchor = target_kp[0][1]
+
+  # for each body part that we calculated angle and size for
+  for i in range(len(template_kp)):
+
+    angles = (template_kp[i][0], target_kp[i][0])
+    diff_angle = max(angles) - min(angles)
+
+    templ_size = (template_kp[i][1],templ_anchor)
+    templ_size = abs(min(templ_size) / max(templ_size))
+
+    tar_size = (target_kp[i][1], targ_anchor)
+    tar_size = abs(min(tar_size) / max(tar_size))
+
+    if diff_angle > angle_deviation:
+      devs.append(i)
+      print("{0} has different angle".format(i))
+
+    elif max(tar_size,templ_size) - min(tar_size,templ_size) > size_deviation:
+      devs.append(i)
+      print("{0} has different size".format(i))
+
+  return devs
+
+deviations = matching(template_values, target_values)
+print(deviations)
+
+def draw_deviations(img, keypoints, pairs, deviations):
+
+  for i, pair in enumerate(pairs):
+
+    if i in deviations:
+      color = (0,0,255)
+    else:
+      color = (0,255,0)
+      
+    cv.line(img, (keypoints[pair[0]][1], keypoints[pair[0]][0]), (keypoints[pair[1]][1], keypoints[pair[1]][0]), color=color, lineType=cv.LINE_AA, thickness=1)
+
+blank_image = np.zeros(shape=[257, 257, 3], dtype=np.uint8)
+draw_deviations(blank_image, arr_2, parts_to_compare, deviations) # might be wrong
+cv.imshow("target image", blank_image)
+cv.waitKey(0)
