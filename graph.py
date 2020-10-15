@@ -46,14 +46,17 @@ def graphPose (json, bodyJoint):
     plt.show()
 
 
-
 # MAIN #
 ## CONFIGURE IF YOU WOULD LIKE TO GRAPH OTHER JOINTS AND JSON FILES ##
+### NOTE: ALL FOLDERS MUST FOLLOW THE SAME EXACT FILE STRUCTURE ###
 joints = ['leftWrist', 'rightWrist']
 directories = [r'front_swings', r'back_swings']
 
 for directory in directories:
-    for filename in os.listdir(directory):
-        if filename.endswith('.json'):
-            for joint in joints:
-                graphPose(directory + '/' + filename, joint)
+    for subdir, dirs, files in os.walk(directory):
+        if os.path.basename(subdir) == 'allKeyPoints':
+            for file in files:
+                if file.endswith('.json'):
+                    for joint in joints:
+                        graphPose(subdir + '/' + file, joint)
+        

@@ -38,11 +38,11 @@ def angle_length(p1, p2):
 
 # MAIN
 # json data of template
-data_1 = pd.read_json('frontswing_5.json')
+data_1 = pd.read_json('front_swings/front1/sevenKeyFrames/backswing.json')
 keyPoints_1 = data_1['keyPoints']
 
 # json data of target
-data_2 = pd.read_json('frontswing_6.json')
+data_2 = pd.read_json('front_swings/front2/sevenKeyFrames/backswing.json')
 keyPoints_2 = data_2['keyPoints']
 
 # template
