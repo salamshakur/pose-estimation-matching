@@ -125,4 +125,26 @@ def draw_deviations(img, keypoints, pairs, deviations):
 blank_image = np.zeros(shape=[257, 257, 3], dtype=np.uint8)
 draw_deviations(blank_image, arr_2, parts_to_compare, deviations) # might be wrong
 cv.imshow("target image", blank_image)
-cv.waitKey(0)
+
+target_pose = np.zeros_like(blank_image)
+
+# print('testing arr_2: ', arr_2)
+# print('testing arr_2[5:, 0]: ', arr_2[5:])
+# print('testing arr_2[5:, 1]: ', arr_2[5:][1])
+
+arr_2_xVals = []
+arr_2_yVals = []
+for i in range(5, len(arr_2)):
+  arr_2_xVals.append(arr_2[i][0])
+  arr_2_yVals.append(arr_2[i][1])
+
+# set the new dimensions of the image to reduce the size
+buffer = 5 # size of the area around the pose
+top_left_y = min(arr_2_xVals) - buffer
+top_left_x = min(arr_2_yVals) - buffer
+buttom_right_y = max(arr_2_xVals) + buffer
+buttom_right_x = max(arr_2_yVals) + buffer
+
+## stuck here because i don't have heatmap of target show...
+
+#cv.waitKey(0)

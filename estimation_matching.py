@@ -97,6 +97,7 @@ cv.imshow("kps drawing template", draw_kps(template_show.copy(), template_kps))
 
 target_show = np.squeeze((target_input.copy()*127.5+127.5)/255.0)
 target_show = np.array(target_show*255,np.uint8)
+print('target show: ', target_show)
 target_kps = parse_output(target_heatmaps,target_offsets,0.3)
 cv.imshow("kps drawing target", draw_kps(target_show.copy(), target_kps))
 
@@ -248,40 +249,46 @@ if score >= threshold:
 else:
   print("Don't match")
 
-def draw_grid(img, grid_size=9, heatmap=None, part=1):
 
-    color = (0,255,255)
 
-    small_size = min(img.shape[0], img.shape[1])
-    cell_size = small_size // grid_size
-    res = int(small_size % grid_size)
 
-    x = res // 2
-    y = res // 2
 
-    while x < img.shape[1]:
-      cv.line(img, (x, 0), (x, img.shape[0]), color=color, lineType=cv.LINE_AA, thickness=1)
-      x += cell_size
 
-    while y < img.shape[0]:
-      cv.line(img, (0, y), (img.shape[1], y), color=color, lineType=cv.LINE_AA, thickness=1)
-      y += cell_size
 
-    center_x = res//2
-    center_y = res//2 + cell_size//2
-
-    cv.putText(image,str(round(heatmap[0,0,part],1)), (center_x,center_y), cv.FONT_HERSHEY_SIMPLEX, 0.3, color)
-
-    for row_idx, row in enumerate(heatmap[...,part]):
-
-      for col_idx, column in enumerate(row):
-        cv.putText(image,str(round(heatmap[col_idx,row_idx,part],1)), (center_x,center_y), cv.FONT_HERSHEY_SIMPLEX, 0.3, color)
-        center_y += cell_size
-        
-      center_x += cell_size
-      center_y = res//2 + cell_size//2
-
+# WARNING #
 # DO NOT UNCOMMENT UNLESS YOU WANT TO OVERRIDE YOUR FILE
+#def draw_grid(img, grid_size=9, heatmap=None, part=1):
+
+#     color = (0,255,255)
+
+#     small_size = min(img.shape[0], img.shape[1])
+#     cell_size = small_size // grid_size
+#     res = int(small_size % grid_size)
+
+#     x = res // 2
+#     y = res // 2
+
+#     while x < img.shape[1]:
+#       cv.line(img, (x, 0), (x, img.shape[0]), color=color, lineType=cv.LINE_AA, thickness=1)
+#       x += cell_size
+
+#     while y < img.shape[0]:
+#       cv.line(img, (0, y), (img.shape[1], y), color=color, lineType=cv.LINE_AA, thickness=1)
+#       y += cell_size
+
+#     center_x = res//2
+#     center_y = res//2 + cell_size//2
+
+#     cv.putText(image,str(round(heatmap[0,0,part],1)), (center_x,center_y), cv.FONT_HERSHEY_SIMPLEX, 0.3, color)
+
+#     for row_idx, row in enumerate(heatmap[...,part]):
+
+#       for col_idx, column in enumerate(row):
+#         cv.putText(image,str(round(heatmap[col_idx,row_idx,part],1)), (center_x,center_y), cv.FONT_HERSHEY_SIMPLEX, 0.3, color)
+#         center_y += cell_size
+        
+#       center_x += cell_size
+#       center_y = res//2 + cell_size//2
 # image = cv.imread('1.PNG')
 # image = cv.resize(image, (257, 257))
 # draw_grid(image, 9, template_heatmaps)
