@@ -1,3 +1,6 @@
+# CREDIT: https://medium.com/roonyx/pose-estimation-and-matching-with-tensorflow-lite-posenet-model-ea2e9249abbd
+# I will be using this code as a template for my personal pose estimation
+
 import tensorflow as tf
 import numpy as np
 from PIL import Image
@@ -7,7 +10,7 @@ import cv2 as cv
 import math
 
 model_path = "posenet_model/posenet_mobilenet_v1_100_257x257_multi_kpt_stripped.tflite"
-template_path = "pose_images/3.PNG"
+template_path = "pose_images/8.PNG"
 target_path = "pose_images/9.PNG"
 
 interpreter = tf.lite.Interpreter(model_path=model_path)
@@ -41,8 +44,6 @@ template_output_data = interpreter.get_tensor(output_details[0]['index'])
 template_offset_data = interpreter.get_tensor(output_details[1]['index'])
 template_heatmaps = np.squeeze(template_output_data)
 template_offsets = np.squeeze(template_offset_data)
-print("template_heatmaps' shape:", template_heatmaps.shape)
-print("template_offsets' shape:", template_offsets.shape)
 
 interpreter.set_tensor(input_details[0]['index'], target_input)
 interpreter.invoke()
@@ -97,7 +98,6 @@ cv.imshow("kps drawing template", draw_kps(template_show.copy(), template_kps))
 
 target_show = np.squeeze((target_input.copy()*127.5+127.5)/255.0)
 target_show = np.array(target_show*255,np.uint8)
-print('target show: ', target_show)
 target_kps = parse_output(target_heatmaps,target_offsets,0.3)
 cv.imshow("kps drawing target", draw_kps(target_show.copy(), target_kps))
 
@@ -137,7 +137,6 @@ def angle_length(p1, p2):
 print(template_kps)
 template_values = []
 for part in parts_to_compare:
-  # print(template_kps[part[0]])
   template_values.append(angle_length(template_kps[part[0]][:2], template_kps[part[1]][:2]))
 print(template_values)
 
@@ -170,6 +169,7 @@ def matching(template_kp, target_kp, angle_deviation=30, size_deviation=1):
   for i in range(len(template_kp)):
 
     angles = (template_kp[i][0], target_kp[i][0])
+    print('angle ',i,' :',angles)
     diff_angle = max(angles) - min(angles)
 
     templ_size = (template_kp[i][1],templ_anchor)
@@ -236,7 +236,7 @@ template_pose = cv.cvtColor(template_pose, cv.COLOR_BGR2GRAY)
 target_pose = cv.cvtColor(target_pose, cv.COLOR_BGR2GRAY)
 
 # the greater the threshold the more exact the pose has to match
-threshold = 0.4 # .4 seems to be a perfect threshold
+threshold = 0.1 # .4 seems to be a perfect threshold
 
 w, h = target_pose.shape[::-1]
 res = cv.matchTemplate(target_pose,template_pose, cv.TM_CCOEFF_NORMED)
