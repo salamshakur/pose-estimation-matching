@@ -141,9 +141,9 @@ impact_matches    = getMatches(references[4], frames_values)
 follow_matches    = getMatches(references[5], frames_values)
 
 # print matches
-print('address matches: ', address_matches)
-print('takeaway matches: ', takeaway_matches)
+print('address matches: ',   address_matches)
+print('takeaway matches: ',  takeaway_matches)
 print('backswing matches: ', backswing_matches)
 print('downswing matches: ', downswing_matches)
-print('impact matches: ', impact_matches)
-print('follow matches: ', follow_matches)
+print('impact matches: ',    impact_matches)
+print('follow matches: ',    follow_matches)
